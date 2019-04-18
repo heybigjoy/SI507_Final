@@ -1,6 +1,6 @@
-# Project Title
+# SI507_Final
 
-SI507_Final
+Xinyue(Joy) Huang
 
 [Link to this repository](https://github.com/heybigjoy/SI507_Final)
 
