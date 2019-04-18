@@ -19,7 +19,6 @@ My project will aggregate artist and exhibiton data in MoMA and allow a user see
 
 1. A useful instruction goes here
 2. A useful second step here
-3. (Optional): Markdown syntax to include an screenshot/image: ![alt text](image.jpg)
 
 ## Routes in this application
 - `/home` -> this is the home page
@@ -33,11 +32,11 @@ My project will aggregate artist and exhibiton data in MoMA and allow a user see
 ## In this repository:
 - SI507project_tools.py
 - SI507project_tests.py
-- Sample Data
+- /sample_data
   - database_plan.png
-  - MoMAExhibitions1929to1989_clean_sample.py
+  - MoMAExhibitions1929to1989_clean_sample.csv
   - moma_data_sample.sqlite
-- MoMAExhibitions1929to1989.py
+- MoMAExhibitions1929to1989.csv
 - requirements.txt
 - README.md
 
@@ -48,7 +47,6 @@ My project will aggregate artist and exhibiton data in MoMA and allow a user see
 - I have only set the route of the greeting for the Flask application, more will be able to set up later.
 - I have now experimenting some modules for data visualization, but I haven't incorporate into the code yet, therefore my requirements.txt is not complete, it will change for the final submission.
 -
-
 
 
 ---
