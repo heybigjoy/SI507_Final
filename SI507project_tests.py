@@ -1,9 +1,6 @@
 from SI507project_tools import *
 import unittest
 import csv
-#import numpy as np
-import random
-import itertools
 
 class PartOne(unittest.TestCase):
     def test_moma_clean(self):
