@@ -1,98 +1,38 @@
-import requests, json, csv
-from bs4 import BeautifulSoup
-from advanced_expiry_caching import Cache
+from SI507project_tools import *
+import unittest
+import csv
+#import numpy as np
+import random
+import itertools
 
+class PartOne(unittest.TestCase):
+    def test_moma_clean(self):
+        self.cleaned_file = open('MoMAExhibitions1929to1989_clean.csv','r')
+        self.row_reader = self.cleaned_file.readlines()
+        # print(self.row_reader) # For debug
+        self.assertTrue(self.row_reader[1].split(",")[0], "Testing that there is a Title / first value in the row at index 1")
+        self.assertTrue(self.row_reader[100].split(",")[0], "Testing that there is a Title / first value in the row at index 100")
+        self.cleaned_file.close()
 
-START_URL = "https://www.moma.org/calendar/exhibitions/history?locale=zh&utf8=%E2%9C%93&q=&sort_date=opening_date&constituent_id=&mde_type=Exhibition&begin_date=2010&end_date=2019&location=both"
-FILENAME = "final_cache.json"
+    def test_moma_clean2(self):
+        cleaned_file = open('MoMAExhibitions1929to1989_clean.csv','r')
+        self.contents = cleaned_file.readlines()
+        cleaned_file.close()
+        self.assertTrue("46 Painters and Sculptors under 35 Years of Age,4/11/1930,4/27/1930,moma.org/calendar/exhibitions/2025,A. Everett Austin, Jr.,N/A,N/A,N/A,N/A,moma.org/artists/16555\n" in self.contents, "Testing that the 46 Painters and Sculptors under 35 Years of Age line exists correctly with proper NAs in the clean file")
+        self.assertTrue("Modern Architecture: International Exhibition,2/9/1932,3/23/1932,moma.org/calendar/exhibitions/2044,Russell G. Cory,N/A,N/A,N/A,N/A,moma.org/artists/63223\n" in self.contents, "Testing that Modern Architecture: International Exhibition is correct in resulting file with proper NAs in the clean file")
 
-# So I can use 1 (one) instance of the Cache tool -- just one for my whole program, even though I'll get data from multiple places
-PROGRAM_CACHE = Cache(FILENAME)
+#
+# class PartTwo(unittest.TestCase):
+#     def test_median_rating(self):
+#         self.assertEqual(median_rating, "PG-13", "Testing that median_rating has the correct value. NOTE that of course, hard-coding what you see on your screen is not acceptable here, even though we can't AUTOMATICALLY test your coding process -- you should write code to achieve this result; humans will look at submissions.")
+#
+# class PartThree(unittest.TestCase):
+#     def test_sample_fake_movies1(self):
+#         self.assertTrue(len(sample_fake_movies.split("\n")) >= 10, "Testing that there are at least 10 lines in sample_fake_movies (note that other constraints will be tested manually by humans to assure full points on this question -- deductions may still occur if instructions were not followed)")
+#
+#     def test_sample_fake_movies2(self):
+#         self.assertTrue( (len(sample_fake_movies.split("\n")[0]) <= 45) or (len(sample_fake_movies.split("\n")[0]).split() <= 9), "Testing that sample fake movies abides by constraints for length or word # in title")
+#
 
-# assuming constants exist as such
-# use a tool to build functionality here
-def access_page_data(url):
-    data = PROGRAM_CACHE.get(url)
-    if not data:
-        data = requests.get(url).text
-        PROGRAM_CACHE.set(url, data) # default here with the Cache.set tool is that it will expire in 7 days, which is probs fine, but something to explore
-    return data
-
-#######
-
-main_page = access_page_data(START_URL)
-
-# explore... find that there's a <ul> with class 'topics' and I want the links at each list item...
-
-# I've cached this so I can do work on it a bunch
-main_soup = BeautifulSoup(main_page, features="html.parser")
-list_of_exhibitions= main_soup.find_all('a',{'class':'calendar-tile__link flex-column'})
-#print(list_of_exhibitions) # cool
-
-# for each list item in the unordered list, I want to capture -- and CACHE so I only get it 1 time this week --
-# the data at each URL in the list...
-#all_states_links = list_of_states.find_all('a')
-#print(all_links) # cool
-
-# # Debugging/thinking code:
-
-# for link in list_of_exhibitions:
-#     print(link['href'])
-
-# get data of list of parts from the link of each state
-exhibition_pages = [] # gotta get all the data in BeautifulSoup objects to work with...
-for l in list_of_exhibitions:
-    page_data = access_page_data("https://www.moma.org"+l['href'])
-    # print(page_data)
-    soup_of_page = BeautifulSoup(page_data, features="html.parser")
-    #print(soup_of_page)
-    exhibition_pages.append(soup_of_page)
-
-# list_of_artist = []
-# for e in exhibition_pages:
-#     try:
-#         list_of_artist = e.find_all('li',{'class':'grid-item--artist-term'})
-#     except:
-#         pass
-#     artist_links = list_of_artist.find_all('a')
-#     for link in artist_links:
-#         print(link['href'])
-
-e1_URL = "https://www.moma.org/calendar/exhibitions/2027?locale=zh"
-e1_page = access_page_data(e1_URL)
-e1_soup = BeautifulSoup(e1_page, features="html.parser")
-
-list_of_artists = e1_soup.find_all('li',{'class':'grid-item--artist-term'})
-artist_links = list_of_artists.find('a')
-print(artist_links)
-
-
-
-# all_parks_info = []
-# all_parks_name = {}
-# for state in states_pages:
-#     list_of_parks = []
-#     list_of_parks = state.find_all('div',{'class':'list_left'})
-#     for park in list_of_parks:
-#         park_info = []
-#         park_soups = []
-#         park_name = park.find('h3').text
-#         park_link = park.find('a')
-#         #print(park_link['href'])
-#         park_data = access_page_data("https://www.nps.gov"+park_link['href']+"index.htm")
-#         soup_of_park = BeautifulSoup(park_data, features="html.parser")
-#         park_states = soup_of_park.find('span',{'class':'Hero-location'}).text
-#         print(park_states)
-#         if park_states in list(us_state_abbrev.keys()):
-#             print(us_state_abbrev[park_states])
-#             park_states_abbrev = us_state_abbrev[park_states]
-#         else:
-#             park_states_abbrev = park_states
-#         if park_name not in list(all_parks_name.keys()):
-#             all_parks_name[park_name] = ''
-#             park_info.append(park_name) #name
-#             park_info.append(park.find('h2').text) #type
-#             park_info.append(park.find('h4').text) #location
-#             park_info.append(park_states_abbrev) #states
-#             park_info.append(park.find('p').text) #description
-#             all_parks_info.append(park_info)
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

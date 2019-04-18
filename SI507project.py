@@ -10,21 +10,19 @@ app = Flask(__name__)
 @app.route('/')
 def welcome():
     create_table()
-    return '<h1>Hello! Welcome to the movies app!</h1>'
+    return '<h1>Hello! Welcome to my MoMA app!</h1>'
 
-@app.route('/new/movie/<title>/<rating>/<director>')
-def new_movie(title, rating, director):
-    id = insert_director((director,))
-    insert_movie(title, float(rating), id)
-    return 'saving new movie {} by {} to our database'.format(title, director)
+@app.route('/exhibition')
+def exhibiton(title, rating, director):
+    pass
 
-@app.route('/movies/all')
-def movie_data():
-    return present_movie()
+@app.route('/artist')
+def artists():
+    pass
 
-@app.route('/directors/all')
-def director_data():
-    return present_director_list()
+@app.route('exhibition/graph')
+def graph():
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
