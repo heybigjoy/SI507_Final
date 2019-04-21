@@ -1,6 +1,6 @@
-# Project Title
+# SI507_Final
 
-SI507_Final
+Xinyue(Joy) Huang
 
 [Link to this repository](https://github.com/heybigjoy/SI507_Final)
 
@@ -33,7 +33,7 @@ My project will aggregate artist and exhibiton data in MoMA and allow a user see
 ## In this repository:
 - SI507project_tools.py
 - SI507project_tests.py
-- Sample Data
+- /sample_data
   - database_plan.png
   - MoMAExhibitions1929to1989_clean_sample.py
   - moma_data_sample.sqlite
