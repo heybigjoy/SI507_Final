@@ -18,18 +18,18 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 dash_app1 = dash.Dash(__name__, server = server, url_base_pathname='/exhibitions/all/', external_stylesheets=external_stylesheets)
 dash_app2 = dash.Dash(__name__, server = server, url_base_pathname='/reports/', external_stylesheets=external_stylesheets)
 dash_app1.layout = html.Div(children=[
-    html.H1(children='MoMa App'),
+    html.H1(children='MoMA App'),
 
     html.Div(children='''
-        This is a diagram to show the gender distribution of MoMa's Exhibitions from 1929 to 1989.
+        This is a diagram to show the gender distribution of MoMA's Exhibitions from 1929 to 1989.
     '''),
 
     dcc.Graph(
         id='gender-graph',
         figure={
             'data': [
-                {'x': Year_List(), 'y': Gender_List('Male'), 'type': 'bar', 'name': 'Male'},
-                {'x': Year_List(), 'y': Gender_List('Female'), 'type': 'bar', 'name': u'Female'},
+                {'x': [1, 2, 3], 'y': [1, 2, 3], 'type': 'bar', 'name': 'Male'},
+                {'x': [1, 2, 3], 'y':[1, 2, 3], 'type': 'bar', 'name': u'Female'},
             ],
             'layout': {
                 'title': 'MoMa Exhibition Visualization'
@@ -56,13 +56,28 @@ def welcome():
     insert_exhibitions_artists()
     return "Hello! Welcome to my MoMa Application!"
 
-@server.route('/exhibitions/all/')
-def render_reports():
-    return flask.redirect('/dash1/')
+@server.route('/count/<Year1>/<Gender>')
+def count(Year, Gender):
+    return str(Count_Exhibition(Year, Gender))
 
-@server.route('/exhibitions/<year>')
-def show_exhibitions(year):
-    return str(Gender_Distribution(year))
+@server.route('/count/all')
+def count_all():
+    male_count = 0
+    female_count = 0
+    count_list = []
+    for year in range(1929,1990):
+        male_count += Count_Exhibition(year, 'male')
+        female_count += Count_Exhibition(year, 'female' )
+        count_list.append((male_count,female_count))
+    return str(count_list)
+
+# @server.route('/exhibitions/all/')
+# def render_reports():
+#     return flask.redirect('/dash1/')
+#
+# @server.route('/exhibitions/<year>')
+# def show_exhibitions(year):
+#     return str(Gender_Distribution(year))
 
 # @server.route('/male')
 # def show_male():

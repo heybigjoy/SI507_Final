@@ -14,8 +14,15 @@ def cleanup_tool(row):
     newRow = []
     newRow.extend([row[2], modify_datetoyear(row[4]), row[7], row[12], row[19], row[20], row[21], row[23], row[27]])
     for n in range(len(newRow)):
-        if (newRow[n] == "" and newRow[n] == "NULL"):
+        if (newRow[n] == "" ):
             newRow[n] = "NA"
+        if (newRow[n] == "" ):
+            newRow[n] = "NA"
+        if (newRow[n] == "Male" ):
+            newRow[n] = "male"
+        if (newRow[n] == "Female" ):
+            newRow[n] = "female"
+
     return newRow
 
 def cleanup():
@@ -32,9 +39,9 @@ def cleanup():
 def create_table():
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS Artists (Id INTEGER PRIMARY KEY AUTOINCREMENT, ArtistName VARCHAR UNIQUE, Nationality VARCHAR, BeginYear INTEGER, EndYear INTEGER, Gender VARCHAR, ArtistURL VARCHAR)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS Exhibitions (Id INTEGER PRIMARY KEY AUTOINCREMENT, ExhibitionTitle VARCHAR UNIQUE, ExhibitionYear VARCHAR, ExhibitionURL VARCHAR)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS Exhibition_Artist (ExhibitionID INTEGER, ArtistId INTEGER, FOREIGN KEY (ExhibitionId) References Exhibitions(Id), FOREIGN KEY (ArtistId) References Artists(Id))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Artists (ArtistId INTEGER PRIMARY KEY AUTOINCREMENT, ArtistName VARCHAR UNIQUE, Nationality VARCHAR, BeginYear INTEGER, EndYear INTEGER, Gender VARCHAR, ArtistURL VARCHAR)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Exhibitions (ExhibitionId INTEGER PRIMARY KEY AUTOINCREMENT, ExhibitionTitle VARCHAR UNIQUE, ExhibitionYear VARCHAR, ExhibitionURL VARCHAR)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Exhibition_Artist (ExhibitionId INTEGER, ArtistId INTEGER, FOREIGN KEY (ExhibitionId) References Exhibitions(ExhibitionId), FOREIGN KEY (ArtistId) References Artists(ArtistId))''')
     conn.commit()
     conn.close()
 
@@ -75,51 +82,63 @@ def insert_exhibitions_artists():
         header = csvReader.__next__()
         exhibitions_artists_info_list = []
         for row in csvReader:
-            c.execute('''SELECT Id from Exhibitions where ExhibitionTitle = ?''', (row[0],))
+            c.execute('''SELECT ExhibitionId from Exhibitions where ExhibitionTitle = ?''', (row[0],))
             ExhibitionId = c.fetchone()[0]
-            c.execute('''SELECT Id from Artists where ArtistName = ?''', (row[3],))
+            c.execute('''SELECT ArtistId from Artists where ArtistName = ?''', (row[3],))
             ArtistId = c.fetchone()[0]
             exhibitions_artists_info_list.append((ExhibitionId, ArtistId))
     c.executemany('''INSERT into Exhibition_Artist (ExhibitionId, ArtistId) VALUES (?,?)''', exhibitions_artists_info_list)
     conn.commit()
     conn.close()
 
-def Exhibition_Id_List(Year):
+def Count_Exhibition(Year, Gender):
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
-    c.execute('''SELECT Id from Exhibitions where ExhibitionYear = ?''', (Year,))
-    data = []
-    for row in c:
-        data.append(str(row[0]))
+    c.execute('''SELECT COUNT (*)
+                FROM Exhibitions, Artists, Exhibition_Artist
+                WHERE Exhibition_Artist.ExhibitionId = Exhibitions.ExhibitionId
+                AND Exhibition_Artist.ArtistId = Artists.ArtistId
+                AND ExhibitionYear = ?
+                AND Gender = ? ''', (Year, Gender))
+    count = c.fetchall()[0][0]
     conn.close()
-    return data
-
-def Gender_Distribution(Year):
-    conn = sqlite3.connect(sqlite_file)
-    c = conn.cursor()
-    artist_list = []
-    gender_list = []
-    for e in Exhibition_Id_List(Year):
-        c.execute('''SELECT ArtistId from Exhibition_Artist where ExhibitionId = ?''', (e,))
-        for row in c:
-            artist_list.append(str(row[0]))
-    for a in artist_list:
-        c.execute('''SELECT Gender from Artists where Id = ?''', (a,))
-        for row in c:
-            gender_list.append(str(row[0]))
-    conn.close()
-    male_count = gender_list.count("Male")
-    female_count = gender_list.count("Female")
-    return {"Male":male_count, "Female": female_count, "Year": Year}
-
-def Year_List():
-    year_list = []
-    for year in range(1929,1990):
-        year_list.append(year)
-    return year_list
-
-def Gender_List(gender):
-    gender_count_list = []
-    for i in Year_List():
-        gender_count_list.append(Gender_Distribution(i)[gender])
-    return gender_count_list
+    return count
+# def Exhibition_Id_List(Year):
+#     conn = sqlite3.connect(sqlite_file)
+#     c = conn.cursor()
+#     c.execute('''SELECT Id from Exhibitions where ExhibitionYear = ?''', (Year,))
+#     data = []
+#     for row in c:
+#         data.append(str(row[0]))
+#     conn.close()
+#     return data
+#
+# def Gender_Distribution(Year):
+#     conn = sqlite3.connect(sqlite_file)
+#     c = conn.cursor()
+#     artist_list = []
+#     gender_list = []
+#     for e in Exhibition_Id_List(Year):
+#         c.execute('''SELECT ArtistId from Exhibition_Artist where ExhibitionId = ?''', (e,))
+#         for row in c:
+#             artist_list.append(str(row[0]))
+#     for a in artist_list:
+#         c.execute('''SELECT Gender from Artists where Id = ?''', (a,))
+#         for row in c:
+#             gender_list.append(str(row[0]))
+#     conn.close()
+#     male_count = gender_list.count("Male")
+#     female_count = gender_list.count("Female")
+#     return {"Male":male_count, "Female": female_count, "Year": Year}
+#
+# def Year_List():
+#     year_list = []
+#     for year in range(1929,1990):
+#         year_list.append(year)
+#     return year_list
+#
+# def Gender_List(gender):
+#     gender_count_list = []
+#     for i in Year_List():
+#         gender_count_list.append(Gender_Distribution(i)[gender])
+#     return gender_count_list
