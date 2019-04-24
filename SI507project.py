@@ -56,7 +56,7 @@ def welcome():
     insert_exhibitions_artists()
     return "Hello! Welcome to my MoMa Application!"
 
-@server.route('/count/<Year1>/<Gender>')
+@server.route('/count/<Year>/<Gender>')
 def count(Year, Gender):
     return str(Count_Exhibition(Year, Gender))
 
