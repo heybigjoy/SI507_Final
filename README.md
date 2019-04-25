@@ -61,10 +61,10 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 - [x] Project includes at least 1 test suite file with reasonable tests in it.
 - [x] Includes a `requirements.txt` file containing all required modules to run program
 - [x] Includes a clear and readable README.md that follows this template
-- [ ] Includes a sample .sqlite/.db file
+- [x] Includes a sample .sqlite/.db file
 - [x] Includes a diagram of your database schema
 - [x] Includes EVERY file needed in order to run the project
-- [ ] Includes screenshots and/or clear descriptions of what your project should look like when it is working
+- [x] Includes screenshots and/or clear descriptions of what your project should look like when it is working
 
 ### Flask Application
 - [x] Includes at least 3 different routes
@@ -75,13 +75,13 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 
 ### Additional Components (at least 6 required)
 - [x] Use of a new module
-- [ ] Use of a second new module
+- [x] Use of a second new module
 - [ ] Object definitions using inheritance (indicate if this counts for 2 or 3 of the six requirements in a parenthetical)
 - [x] A many-to-many relationship in your database structure
 - [ ] At least one form in your Flask application
 - [ ] Templating in your Flask application
-- [ ] Inclusion of JavaScript files in the application
-- [ ] Links in the views of Flask application page/s
+- [x] Inclusion of JavaScript files in the application
+- [x] Links in the views of Flask application page/s
 - [ ] Relevant use of `itertools` and/or `collections`
 - [ ] Sourcing of data using web scraping
 - [ ] Sourcing of data using web REST API requests

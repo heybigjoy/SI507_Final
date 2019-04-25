@@ -18,7 +18,6 @@ class PartOne(unittest.TestCase):
         self.assertTrue("46 Painters and Sculptors under 35 Years of Age,4/11/1930,4/27/1930,moma.org/calendar/exhibitions/2025,A. Everett Austin, Jr.,N/A,N/A,N/A,N/A,moma.org/artists/16555\n" in self.contents, "Testing that the 46 Painters and Sculptors under 35 Years of Age line exists correctly with proper NAs in the clean file")
         self.assertTrue("Modern Architecture: International Exhibition,2/9/1932,3/23/1932,moma.org/calendar/exhibitions/2044,Russell G. Cory,N/A,N/A,N/A,N/A,moma.org/artists/63223\n" in self.contents, "Testing that Modern Architecture: International Exhibition is correct in resulting file with proper NAs in the clean file")
 
-#
 # class PartTwo(unittest.TestCase):
 #     def test_median_rating(self):
 #         self.assertEqual(median_rating, "PG-13", "Testing that median_rating has the correct value. NOTE that of course, hard-coding what you see on your screen is not acceptable here, even though we can't AUTOMATICALLY test your coding process -- you should write code to achieve this result; humans will look at submissions.")

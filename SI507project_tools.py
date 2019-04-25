@@ -1,6 +1,9 @@
 import csv
 import sqlite3
 import json
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go
 
 sqlite_file = 'moma_data.sqlite'
 csv_file = 'MoMAExhibitions1929to1989.csv'
@@ -91,7 +94,7 @@ def insert_exhibitions_artists():
     conn.commit()
     conn.close()
 
-def Count_Exhibition(Year, Gender):
+def count_gender(Year, Gender):
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
     c.execute('''SELECT COUNT (*)
@@ -103,42 +106,44 @@ def Count_Exhibition(Year, Gender):
     count = c.fetchall()[0][0]
     conn.close()
     return count
-# def Exhibition_Id_List(Year):
-#     conn = sqlite3.connect(sqlite_file)
-#     c = conn.cursor()
-#     c.execute('''SELECT Id from Exhibitions where ExhibitionYear = ?''', (Year,))
-#     data = []
-#     for row in c:
-#         data.append(str(row[0]))
-#     conn.close()
-#     return data
-#
-# def Gender_Distribution(Year):
-#     conn = sqlite3.connect(sqlite_file)
-#     c = conn.cursor()
-#     artist_list = []
-#     gender_list = []
-#     for e in Exhibition_Id_List(Year):
-#         c.execute('''SELECT ArtistId from Exhibition_Artist where ExhibitionId = ?''', (e,))
-#         for row in c:
-#             artist_list.append(str(row[0]))
-#     for a in artist_list:
-#         c.execute('''SELECT Gender from Artists where Id = ?''', (a,))
-#         for row in c:
-#             gender_list.append(str(row[0]))
-#     conn.close()
-#     male_count = gender_list.count("Male")
-#     female_count = gender_list.count("Female")
-#     return {"Male":male_count, "Female": female_count, "Year": Year}
-#
-# def Year_List():
-#     year_list = []
-#     for year in range(1929,1990):
-#         year_list.append(year)
-#     return year_list
-#
-# def Gender_List(gender):
-#     gender_count_list = []
-#     for i in Year_List():
-#         gender_count_list.append(Gender_Distribution(i)[gender])
-#     return gender_count_list
+
+def gender_distribution(FromYear, ToYear):
+    male_count = 0
+    female_count = 0
+    male_count_list = []
+    female_count_list = []
+    year_list = []
+
+    for year in range(int(FromYear),int(ToYear)+1):
+        year_list.append(year)
+        male_count += count_gender(year, 'male')
+        female_count += count_gender(year, 'female' )
+        male_count_list.append(male_count)
+        female_count_list.append(female_count)
+
+    trace0 = go.Scatter(
+        x = year_list,
+        y = male_count_list,
+        name = "male"
+    )
+
+    trace1 = go.Scatter(
+        x = year_list,
+        y = female_count_list,
+        name = "female"
+    )
+
+    data = [trace0, trace1]
+
+    layout = go.Layout(
+        title='MoMA Gender Distribution from ' + FromYear + ' to ' + ToYear,
+        xaxis=dict(
+            title='Year'
+        ),
+        yaxis=dict(
+            title='Gender'
+        ),
+    )
+
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
