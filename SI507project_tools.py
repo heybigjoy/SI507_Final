@@ -147,3 +147,15 @@ def gender_distribution(FromYear, ToYear):
 
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+
+def gender_pie_chart(Year):
+    male_count = count_gender(int(Year), 'male')
+    female_count = count_gender(int(Year), 'female')
+    na_count = count_gender(int(Year), 'NA')
+
+    trace = go.Pie(labels=['Male', 'Female', 'NA'], values=[male_count, female_count, na_count])
+
+    data = [trace]
+
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON

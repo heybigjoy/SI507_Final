@@ -32,6 +32,11 @@ def show_gender(FromYear, ToYear):
     bar = gender_distribution(FromYear, ToYear)
     return flask.render_template('show_gender.html', plot=bar)
 
+@app.route('/count/<Year>')
+def gender_pie(Year):
+    pie = gender_pie_chart(Year)
+    return flask.render_template('gender_pie.html', plot=pie)
+
 # @server.route('/exhibitions/all/')
 # def render_reports():
 #     return flask.redirect('/dash1/')
