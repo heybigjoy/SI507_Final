@@ -16,6 +16,7 @@ plotly.tools.set_credentials_file(username='Heybigjoy', api_key='aX2IlyeYA0R8HQ6
 # Set up application
 
 app = flask.Flask(__name__)
+app.secret_key = 'development key'
 
 # Routes
 @app.route('/')
@@ -25,7 +26,12 @@ def welcome():
     insert_artists()
     insert_exhibitions()
     insert_exhibitions_artists()
-    return "Hello, World!"
+    return flask.render_template('index.html')
+
+@app.route('/search')
+def seach():
+   form = SearchForm()
+   return flask.render_template('search_form.html', form=form)
 
 @app.route('/count/<FromYear>/<ToYear>')
 def show_gender(FromYear, ToYear):

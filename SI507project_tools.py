@@ -4,6 +4,8 @@ import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
+from wtforms import Form, IntegerField, validators
+import flask_wtf
 
 sqlite_file = 'moma_data.sqlite'
 csv_file = 'MoMAExhibitions1929to1989.csv'
@@ -159,3 +161,15 @@ def gender_pie_chart(Year):
 
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+
+
+class SearchForm(Form):
+    from_year = IntegerField('fromyear', [
+        validators.NumberRange(min=1929, max=1990, message="Year Must between 1929-1990"),
+        validators.InputRequired(message="You must input a number"),
+    ])
+
+    to_year = IntegerField('toyear', [
+        validators.NumberRange(min=1929, max=1990, message="Year Must between 1929-1990"),
+        validators.InputRequired(message="You must input a number"),
+    ])
