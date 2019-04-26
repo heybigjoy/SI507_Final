@@ -33,6 +33,7 @@ My project will aggregate artist and exhibiton data in MoMA from 1929 to 1989 an
 1. run `python3 SI507project_tests.py`
 
 ## In this repository:
+- SI507project.py
 - SI507project_tools.py
 - SI507project_tests.py
 - /sample_data
@@ -41,6 +42,9 @@ My project will aggregate artist and exhibiton data in MoMA from 1929 to 1989 an
   - moma_data_sample.sqlite
   - pie_chart_sample.png
   - scatter_graph_sample_png
+  - indexpage_sample.png
+  - search_specific_year_sample.png
+  - search_year_range_sample.png
 - /templates
   - index.html
   - search_year.html
