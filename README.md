@@ -26,7 +26,8 @@ My project will aggregate artist and exhibiton data in MoMA from 1929 to 1989 an
 - `/` -> this is the home page, which also allow user to access other links.
 - `/count/<FromYear>/<ToYear>` -> this route visualize the gender distribution in a specific year range in a scatter graph.
 - `/count/<Year>` -> this route visualize the gender distribution of a specific year in a pie chart.
-- `/search` -> this route allow user to input year into a form, which will lead to the according diagram page.
+- `/search/yearrange` -> this route allow user to input a year range into a form, which will lead to the according diagram page.
+- `/search/specificyear` -> this route allow user to input a single year into a form, which will lead to the according diagram page.
 
 ## How to run tests
 1. run `python3 SI507project_tests.py`
@@ -42,7 +43,8 @@ My project will aggregate artist and exhibiton data in MoMA from 1929 to 1989 an
   - scatter_graph_sample_png
 - /templates
   - index.html
-  - search_form.html
+  - search_year.html
+  - search_year_range.html
   - show_gender.html
   - gender_pie.html
 - MoMAExhibitions1929to1989.py
@@ -56,6 +58,7 @@ My project will aggregate artist and exhibiton data in MoMA from 1929 to 1989 an
 - I defined different functions to manipulate the data, focusing on counting the number of artists of different genders of specific year, which helps provide data to my data visualization.
 - I used a plotly module to visualize my data into scatter graph and pie chart.
 - I set up different routes of my Flask application in my SI507project.py file, which allow user to navigate through different pages.
+- I incorporate wtforms module to handling forms in Flask to allow user to input information to search. 
 - I set up different HTML templates to layout my pages in the templates folder.
 - I set up tests in the SI507project_tests.py file to test some results in the csv file and the count function have the correct results.
 
@@ -87,7 +90,7 @@ Below is a list of the requirements listed in the rubric for you to copy and pas
 - [ ] Object definitions using inheritance (indicate if this counts for 2 or 3 of the six requirements in a parenthetical)
 - [x] A many-to-many relationship in your database structure: between Artists and Exhibitions
 - [x] At least one form in your Flask application: use it for search
-- [ ] Templating in your Flask application
+- [x] Templating in your Flask application
 - [ ] Inclusion of JavaScript files in the application
 - [x] Links in the views of Flask application page/s: links are in the index page, and some of them can be access through search page.
 - [ ] Relevant use of `itertools` and/or `collections`

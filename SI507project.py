@@ -1,22 +1,43 @@
 # Import statements necessary
 import flask
 from SI507project_tools import *
-from werkzeug.wsgi import DispatcherMiddleware
-from werkzeug.serving import run_simple
 # import dash
 # import dash_core_components as dcc
 # import dash_html_components as html
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-import wtforms
+from wtforms import Form, IntegerField, SubmitField, validators
+from flask_wtf import Form
 plotly.tools.set_credentials_file(username='Heybigjoy', api_key='aX2IlyeYA0R8HQ6TQaC3')
 
-# My goal:
+
 # Set up application
 
 app = flask.Flask(__name__)
 app.secret_key = 'development key'
+
+
+class SearchYearRange(Form):
+    from_year = IntegerField('fromyear', [
+        validators.NumberRange(min=1929, max=1990, message="Year Must between 1929-1990"),
+        validators.DataRequired(message="You must input a number"),
+    ])
+
+    to_year = IntegerField('toyear', [
+        validators.NumberRange(min=1929, max=1990, message="Year Must between 1929-1990"),
+        validators.DataRequired(message="You must input a number"),
+    ])
+
+    submit = SubmitField('Submit')
+
+class SearchSpecificYear(Form):
+    specific_year = IntegerField('specificyear', [
+        validators.NumberRange(min=1929, max=1990, message="Year Must between 1929-1990"),
+        validators.DataRequired(message="You must input a number"),
+    ])
+
+    submit = SubmitField('Submit')
 
 # Routes
 @app.route('/')
@@ -28,10 +49,29 @@ def welcome():
     insert_exhibitions_artists()
     return flask.render_template('index.html')
 
-@app.route('/search')
-def seach():
-   form = SearchForm()
-   return flask.render_template('search_form.html', form=form)
+@app.route('/search/yearrange', methods=('GET', 'POST'))
+def seach_year_range():
+   form = SearchYearRange(flask.request.form)
+   if form.validate_on_submit():
+        fromyear = form.from_year.data
+        toyear = form.to_year.data
+        flask.flash('Search Success!')
+        return flask.redirect('/count/'+str(fromyear)+'/'+str(toyear))
+   return flask.render_template('search_year_range.html', form=form)
+
+@app.route('/search/specificyear', methods=('GET', 'POST'))
+def seach_specific_year():
+   form = SearchSpecificYear(flask.request.form)
+   if form.validate_on_submit():
+        specificyear = form.specific_year.data
+        flask.flash('Search Success!')
+        return flask.redirect('/count/'+str(specificyear))
+   return flask.render_template('search_year.html', form=form)
+
+# @app.route('/search/oneyear')
+# def seach():
+#    form = SearchForm(wtforms.Form)
+#    return flask.render_template('search_year_range.html', form=form)
 
 @app.route('/count/<FromYear>/<ToYear>')
 def show_gender(FromYear, ToYear):
@@ -42,31 +82,6 @@ def show_gender(FromYear, ToYear):
 def gender_pie(Year):
     pie = gender_pie_chart(Year)
     return flask.render_template('gender_pie.html', plot=pie)
-
-# @server.route('/exhibitions/all/')
-# def render_reports():
-#     return flask.redirect('/dash1/')
-#
-# @server.route('/exhibitions/<year>')
-# def show_exhibitions(year):
-#     return str(Gender_Distribution(year))
-
-# @server.route('/male')
-# def show_male():
-#     return str(Male_List())
-
-# @server.route('/exhibitions/all')
-# def exhibitons_data():
-#     pass
-
-# @server.route('/artists')
-# def artists():
-#     pass
-#
-# @server.route('/exhibition/graph')
-# def graph():
-#     pass
-
 
 if __name__ == '__main__':
     app.run(debug = True)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>MoMA Application</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+  <h1 style="text-align: center"> MoMA Application</h1>
+  <div class="container" style="text-align: center">
+    {% block content %}
+    <h2>Search by a Specific Year</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.specific_year.label }}<br>
+            {{ form.specific_year(size=4) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% endblock %}
+
+    <a href="/">Back to Home</a>
+</div>
+
+</body>
+
+</html>
